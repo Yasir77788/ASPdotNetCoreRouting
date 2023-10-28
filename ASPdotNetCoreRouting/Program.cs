@@ -4,6 +4,17 @@ var app = builder.Build();
 // enable routing
 app.UseRouting();
 
+// use GetEndpoint()
+app.Use(async(context, next)=> {
+    Microsoft.AspNetCore.Http.Endpoint? endPoint =
+        context.GetEndpoint();
+    if (endPoint != null)
+    {
+        await context.Response.WriteAsync($"Endpont: {endPoint.DisplayName}\n");
+    }
+    await next(context);
+}); 
+
 // creating endpoints
 app.UseEndpoints(endpoints =>
 {

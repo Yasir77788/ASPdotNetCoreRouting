@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
@@ -22,8 +24,21 @@ app.UseEndpoints(endpoints =>
     endpoints.MapGet("map1", async (context) =>
     {
         await context.Response.WriteAsync("In Map 1...");
-        await context.Response.WriteAsync("In Map 1...");
     });
+
+    // route parameter
+    // this matches with any file name and any file extesnion
+    // for url localhost:8888/files/sample.txt
+    endpoints.Map("files/{filename}.{extension}",
+        async context =>
+        {
+            // use route values to get file name and file extension
+            string? fName = Convert.ToString(context.Request.RouteValues["filename"]);
+            string? ext = Convert.ToString(context.Request.RouteValues["extension"]);
+            await context.Response.WriteAsync($"In files - {fName} and extension - {ext}");
+
+        }
+        );
 
     endpoints.MapPost("map2", async (context) =>
     {
